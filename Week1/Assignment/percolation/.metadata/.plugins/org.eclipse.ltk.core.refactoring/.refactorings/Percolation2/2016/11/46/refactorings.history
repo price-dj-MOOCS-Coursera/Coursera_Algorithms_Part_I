@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;Percolation.checkValidIndices(...)&apos; to &apos;checkValidCoords&apos;&#x0D;&#x0A;- Original project: &apos;Percolation2&apos;&#x0D;&#x0A;- Original element: &apos;Percolation.checkValidIndices(...)&apos;&#x0D;&#x0A;- Renamed element: &apos;Percolation.checkValidCoords(...)&apos;&#x0D;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;checkValidIndices&apos;" flags="589826" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;{Percolation.java[Percolation~checkValidIndices~I~I" name="checkValidCoords" references="true" stamp="1478410299195" version="1.0"/>
+</session>

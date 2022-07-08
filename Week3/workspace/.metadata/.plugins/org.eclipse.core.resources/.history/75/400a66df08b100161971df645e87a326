@@ -1,0 +1,221 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
+
+/**
+ * 
+ */
+
+/**
+ * @author David Price
+ *
+ */
+public class FastCollinearPoints {
+    private Point[] pts;
+    private Point[] sortedPts;
+    private ArrayList<Segment> segs;
+    private int numSegments;
+    private int n;
+    
+    
+    private static class Segment implements Comparable<Segment> {
+        private final Point p;   // one endpoint of this line segment
+        private final Point q;   // the other endpoint of this line segment
+
+        /**
+         * Initializes a new line segment.
+         *
+         * @param  p one endpoint
+         * @param  q the other endpoint
+         * @throws NullPointerException if either <tt>p</tt> or <tt>q</tt>
+         *         is <tt>null</tt>
+         */
+        public Segment(Point p, Point q) {
+            if (p == null || q == null) {
+                throw new NullPointerException("argument is null");
+            }
+            this.p = p;
+            this.q = q;
+        }
+        
+        @Override
+        public boolean equals(Object that) {
+            if (that == null) {
+                throw new NullPointerException("argument is null");
+            }
+            Segment obj = (Segment) that;
+            if (this.p.equals(obj.p) && this.q.equals(obj.q)) {
+                return true;
+            }
+            return false;
+        }
+        
+        @Override
+        public int compareTo(Segment that) {
+            if (this.p.equals(that.p) && this.q.equals(that.q)) {
+                return 0;
+            }
+            return -1;
+        }
+        
+        
+    }
+    
+    
+    // finds all line segments containing 4 or more points
+    public FastCollinearPoints(Point[] points) {
+     // check if Points array is null - if so throw NullPointerException
+        if (points == null) {
+            throw new NullPointerException("Points array is null");
+        }
+        // check if any element in Points array is null - if so throw NullPointerException
+        for (Point pt : points) {
+            if (pt == null) {
+                throw new NullPointerException("At least one point is null");
+            }
+        }
+        
+        
+        // check if any point is repeated - if so throw IllegalArgumentException
+        if (containsDuplicates(points)) {
+            throw new IllegalArgumentException("Points array contains at least one repeated point");
+        }
+        
+        n = points.length;
+        pts = new Point[n];
+        System.arraycopy(points, 0, pts, 0, points.length);
+        
+        sortedPts = new Point[n];
+        System.arraycopy(pts, 0, sortedPts, 0, sortedPts.length);
+        
+        segs = new ArrayList<Segment>();
+        findLineSegments();
+        
+    }
+    
+    // the number of line segments
+    public int numberOfSegments() {
+        return numSegments;
+    }
+    
+    // the line segments
+    public LineSegment[] segments() {
+        // Convert Segment arraylist to LineSegment Array
+        LineSegment[] ls = new LineSegment[segs.size()];
+        for (int i = 0; i < segs.size(); i++) {
+            ls[i] = new LineSegment(segs.get(i).p, segs.get(i).q);
+        }
+        return Arrays.copyOf(ls, ls.length);
+    }
+    
+    // Private method to check for duplicate points using a Set
+    private boolean containsDuplicates(Point[] x) {
+        
+        for (int j = 0; j < x.length; j++) {
+            for (int k = 0; k < x.length; k++) {
+                if (k != j && x[j].equals(x[k])) {
+                    return true;
+                }
+            }
+        }      
+        return false;
+    }
+    
+    // The actual method to find the ine segments
+    private void findLineSegments() {
+        
+        
+        
+        for (int i = 0; i < n; i++) {
+            
+            Point p = pts[i];
+            Arrays.sort(sortedPts, p.slopeOrder());
+                
+            List<Point> colinearPts = new ArrayList<Point>();
+                
+             
+             for (int j = 1; j < n; j++) {
+                 
+                 
+                 Point q = sortedPts[j - 1];
+                 Point r = sortedPts[j];
+                 //if (p.compareTo(q) != 0 && p.compareTo(r) != 0) {
+                     double slopePQ = p.slopeTo(q);
+                     double slopePR = p.slopeTo(r);
+                      
+                        
+                     if (slopePQ == slopePR) {
+                         
+                         
+                         
+                         //if (!colinearPts.contains(q)) {
+                             colinearPts.add(q);
+                         //}
+                         //if (!colinearPts.contains(r)) {
+                             colinearPts.add(r);
+                         //}
+                         
+                     }
+                     
+                     if (colinearPts.size() >= 3) {
+                             colinearPts.add(p);
+                             Point[] coPts = colinearPts.toArray(new Point[colinearPts.size()]);
+                             Arrays.sort(coPts);
+                             Point a = coPts[0];
+                             Point b = coPts[coPts.length - 1];
+                             Segment lineS = new Segment(a, b);
+                             if (!segs.contains(lineS)) {
+                                 segs.add(lineS);
+                                 break;
+                                 
+                             }
+                             
+                             
+                         
+                     }
+                 
+                         
+                     
+                 
+                       
+                   
+                 
+            }
+             
+         }
+    }
+
+    public static void main(String[] args) {
+
+        // read the n points from a file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+        }
+
+        // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+
+        // print and draw the line segments
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
+    }
+    
+}

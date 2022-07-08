@@ -1,0 +1,144 @@
+import java.util.Arrays;
+
+/**
+ * 
+ */
+
+/**
+ * @author David Price
+ *
+ */
+
+public class Board {
+    private final int n;
+    private final int[][] tiles;
+    
+    // construct a board from an n-by-n array of blocks
+    // (where blocks[i][j] = block in row i, column j)
+    public Board(int[][] blocks) {
+        
+        // test blocks != null
+        if (blocks == null) { throw new NullPointerException("null blocks"); }
+        
+        n = blocks[0].length;
+        this.tiles = copy2DArray(blocks);
+        
+        
+    
+    }
+
+    // board dimension n
+    public int dimension() {
+        return n;
+    }
+
+    // number of blocks out of place
+    public int hamming() {
+        int ham = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (tiles[i][j] != 0) {
+                    if (tiles[i][j] != goalValueAt(i, j)) {
+                        ham++;
+                    }
+                }
+            }
+        }
+        return ham;
+    }
+
+    // sum of Manhattan distances between blocks and goal
+    public int manhattan() {
+        int man = 0;
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int value = tiles[i][j];
+                if (value != 0 && value != goalValueAt(i, j)) {
+                    int i0 = (value - 1) / n;
+                    int j0 = value - 1 - i0 * n;
+                    man += Math.abs(i - i0) + Math.abs(j - j0);
+                }
+            }
+                    
+        }
+        return man;
+    }
+
+    // is this board the goal board?
+    public boolean isGoal() {
+        return hamming() == 0 && manhattan() == 0;
+    }
+    
+    // a board that is obtained by exchanging any pair of blocks
+    public Board twin() {
+        
+    }
+    
+    // does this board equal y?
+    public boolean equals(Object y) {
+        
+    }
+
+    // all neighboring boards
+    public Iterable<Board> neighbors() {
+        
+    }
+    
+    private int goalValueAt(int i, int j) {
+        if (i == n - 1 && j == n - 1) {
+            return 0;
+        }
+        return j + 1 + i * n;
+    }
+    
+    // Converts 2D array to 1D array
+    private int[] convertTo1DArray(int[][] arr) {
+        int[] newArr = new int[arr.length*arr.length];
+        
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length; j++) {
+                newArr[(i * arr.length) + j] = arr[i][j];
+            }
+        }
+        return newArr;
+    }
+    
+    
+    private int[][] copy2DArray(int[][] arr) {
+        int[][] myInt = new int[arr.length][];
+        for(int i = 0; i < arr.length; i++)
+        {
+          myInt[i] = new int[arr[i].length];
+          for (int j = 0; j < arr[i].length; j++)
+          {
+            myInt[i][j] = arr[i][j];
+          }
+        }
+        return myInt;
+    }
+    
+    // Converts 2D array coords to 1D array indices
+    private int xyTo1D(int x, int y) {
+            return x * n + y;
+    }
+    
+
+    // string representation of this board (in the output format specified below)
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(n + "\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                s.append(String.format("%2d ", tiles[i][j]));
+            }
+            s.append("\n");
+        }
+        return s.toString();
+    }
+    
+    // unit tests (not graded)
+    public static void main(String[] args) {
+        
+    }
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<checkstyle-configurations file-format-version="5.0.0" default-check-configuration="Coursera Algorithms Course Styles">
+  <check-configuration name="Coursera Algorithms Course Styles" location="D:\Documents\Dropbox\Coursera\Algorithms\Part_I\checkstyle-coursera.xml" type="external" description="">
+    <additional-data name="protect-config-file" value="false"/>
+  </check-configuration>
+</checkstyle-configurations>

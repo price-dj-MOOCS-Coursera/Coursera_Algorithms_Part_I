@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;level&apos; in &apos;KdTree.compare(...)&apos; to &apos;binLevel&apos;&#x0D;&#x0A;- Original project: &apos;kdtree&apos;&#x0D;&#x0A;- Original element: &apos;KdTree.compare(Point2D, Point2D, int).level&apos;&#x0D;&#x0A;- Renamed element: &apos;level&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;level&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;{KdTree.java[KdTree~compare~QPoint2D;~QPoint2D;~I@level!1973!2000!1977!1981!I!0!false" name="binLevel" references="true" stamp="1481181768474" version="1.0"/>
+</session>

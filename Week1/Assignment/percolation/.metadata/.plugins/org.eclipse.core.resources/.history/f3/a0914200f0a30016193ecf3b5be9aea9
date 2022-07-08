@@ -1,0 +1,147 @@
+/*
+ *
+ * 
+ * 
+ */
+
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
+
+public class Percolation {
+	private final int inputSize, top, bottom, gridSize;
+	private static WeightedQuickUnionUF quickUnion;
+	public int numOpenSites;	// keeps track of open sites
+	private boolean[] openSites;
+	
+	/*
+	 * Create n-by-n grid, with all sites blocked
+	 * 
+	 */
+	
+	public Percolation(int num) throws IllegalArgumentException {  
+		if (num <= 0) {
+	        throw new IllegalArgumentException("inputSize <= 0");
+	    }
+		
+		inputSize = num;
+		gridSize = inputSize*inputSize+2;	// 2 extra for the virtual top and virtual bottom sites
+		
+		// set index values for top and bottom
+		top = inputSize*inputSize;	
+		bottom = inputSize*inputSize+1;
+		
+		quickUnion = new WeightedQuickUnionUF(gridSize);
+		openSites = new boolean[inputSize*inputSize];
+		
+		// Set all sites to be blocked
+		for (int i=0; i < openSites.length; i++) {	
+			openSites[i] = false;
+		}
+		
+		// set number of open sites to zero
+		numOpenSites = 0;	
+		
+		// Connects the virtual top node to all the "top" nodes (0 - N-1)
+		for (int i=0; i < inputSize; i++) {
+			quickUnion.union(top, i);
+		}
+		
+		// Connects the virtual bottom node to all the "bottom" nodes (0 - N-1)
+		for (int i=0; i < inputSize; i++) {
+			quickUnion.union(bottom, inputSize*inputSize - inputSize + i);
+		}
+		
+	}
+	
+	/*
+	 * open site (row, col) if it is not open already
+	 */
+	public void open(int row, int col) {
+		if (checkValidCoords(row, col)) {
+			throw new IndexOutOfBoundsException("Invalid site coords");
+		}
+		
+		if (isOpen(row, col) == false) {
+			openSites[xyTo1D(row, col)] = true;
+			numOpenSites++;
+		}
+		
+		// Union to adjacent sites if they are also open
+		int site = xyTo1D(row, col);
+		
+		if (!(row <= 1)) {	// site not on left side
+			if (isOpen(row-1, col) == true) {	// If site on left is open union site with it
+				quickUnion.union(site, xyTo1D((row-1), col));
+			}
+		}
+		
+		if (!(row >= inputSize)) {	// site not on right side
+			if (isOpen(row+1, col) == true) {	// If site on right is open union site with it
+				quickUnion.union(site, xyTo1D((row+1), col));
+			}
+		}
+		
+		if (!(col <= 1)) {	// site not at top
+			if (isOpen(row, col-1) == true) {	// If site above is open union site with it
+				quickUnion.union(site, xyTo1D(row, (col-1)));
+			}
+		}
+		
+		if (!(col >= inputSize)) {	// site not at bottom
+			if (isOpen(row, col-1) == true) {	// If site below is open union site with it
+				quickUnion.union(site, xyTo1D(row, (col-1)));
+			}
+		}
+		
+	}
+	
+	/*
+	 * is site (row, col) open?
+	 */
+	
+	public boolean isOpen(int row, int col) {
+		if (checkValidCoords(row, col)) {
+			throw new IndexOutOfBoundsException("Invalid site coords");
+		}
+		return openSites[xyTo1D(row, col)];
+	}
+	/*
+	 * is site (row, col) full?
+	 */
+	
+	public boolean isFull(int row, int col) {
+		if (checkValidCoords(row, col)) {
+			throw new IndexOutOfBoundsException("Invalid site coords");
+		}
+		return openSites[xyTo1D(row, col)];
+	}
+	
+	/*
+	 * does the system percolate?
+	 * Are top and bottom virtual sites connected?
+	 */
+	
+	public boolean percolates() {
+		return quickUnion.connected(top, bottom);
+	}
+	
+	
+	// Converts 2D array coords to 1D array indices
+	private int xyTo1D(int x, int y) {
+            return (x-1) * (inputSize) + (y-1);
+    }
+	
+	// Checks if row and col coords are valid or invalid - returns true if any are invalid
+	private boolean checkValidCoords(int row, int col) {
+		if ((row < 1 || row > inputSize) || (col < 1 || col > inputSize)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static void main(String[] args) {
+		
+
+	}
+
+}
